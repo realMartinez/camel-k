@@ -22,8 +22,8 @@ on:
   pull_request:
 
 env:
-  NEW_COVERAGE: 0%
-  OLD_COVERAGE: 0%
+  NEW_COVERAGE: 0
+  OLD_COVERAGE: 0
 jobs:
   report:
     runs-on: ubuntu-latest
