@@ -48,9 +48,9 @@ jobs:
 
       - name: Extract Coverage
         run:
-          $NEW_COVERAGE:=$(grep -o '[^(statements)\s]*$' coverage.out)
-          $NEW_COVERAGE:=${$NEW_COVERAGE::-1}
-          $OLD_COVERAGE:=$(grep -o '(?<=Coverage-)(.*)(?=%)' README.adoc)
+          NEW_COVERAGE:=$(grep -o '[^(statements)\s]*$' coverage.out)
+          NEW_COVERAGE:=${$NEW_COVERAGE::-1}
+          OLD_COVERAGE:=$(grep -o '(?<=Coverage-)(.*)(?=%)' README.adoc)
 
 
       - name: Comment 
