@@ -14,17 +14,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ---------------------------------------------------------------------------
-
+# this comment  is for testing purposes
 name: coverage report
 
 on:
   pull_request:
 
+env:
+  NEW_COVERAGE: 0%
+  OLD_COVERAGE: 0%
 jobs:
-  comment:
+  report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v3
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false 
+          fetch-depth: 0
+      
+      - name: Setup go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+          check-latest: true
+
+      - name: Run Test
+        run: |
+          go test -v ./... -covermode=count -coverprofile=coverage.out
+          go tool cover -func=coverage.out -o=coverage.out
+
+      - name: Extract Coverage
+        run:
+          $NEW_COVERAGE:=$(grep -o '[^(statements)\s]*$' coverage.out)
+          $NEW_COVERAGE:=${$NEW_COVERAGE::-1}
+          $OLD_COVERAGE:=$(grep -o '(?<=Coverage-)(.*)(?=%)' README.adoc)
+
+
+      - name: Comment 
+        uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -32,5 +61,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Test'
+              body: '$OLD_COVERAGE %-> $NEW_COVERAGE  %\n Coverage Difference: %'
             })
