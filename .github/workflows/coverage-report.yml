@@ -20,9 +20,6 @@ name: coverage report
 on:
   pull_request:
 
-env:
-  NEW_COVERAGE: 0%
-  OLD_COVERAGE: 0%
 jobs:
   report:
     runs-on: ubuntu-latest
@@ -47,9 +44,9 @@ jobs:
 
       - name: Extract Coverage
         run:
-          $NEW_COVERAGE:=$(grep -o '[^(statements)\s]*$' coverage.out)
-          $NEW_COVERAGE:=${$NEW_COVERAGE::-1}
-          $OLD_COVERAGE:=$(grep -o '(?<=Coverage-)(.*)(?=%)' README.adoc)
+          NEW_COVERAGE:=$(grep -o '[^(statements)\s]*$' coverage.out)
+          NEW_COVERAGE:=${$NEW_COVERAGE::-1}
+          OLD_COVERAGE:=$(grep -o '(?<=Coverage-)(.*)(?=%)' README.adoc)
 
 
       - name: Comment 
