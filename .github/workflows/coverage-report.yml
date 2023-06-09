@@ -51,11 +51,8 @@ jobs:
           
       - name: Create Comment Body
         run:
-          cat > comment-body.md
+          touch comment-body.md
           echo 'Thank You for contributing!\n Coverage changed from:\n ${oldcoverage} -> ${newcoverage}' > comment-body.md
-          
-          
-
 
       - name: Comment 
         uses: actions/github-script@v3
