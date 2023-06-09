@@ -52,7 +52,7 @@ jobs:
       - name: Create Comment Body
         run:
           cat > comment-body.md
-          echo 'Thank You for contributing!\n Coverage changed from:\n ${oldcoverage} -> ${newcoverage}'
+          echo 'Thank You for contributing!\n Coverage changed from:\n ${oldcoverage} -> ${newcoverage}' > comment-body.md
           
           
 
