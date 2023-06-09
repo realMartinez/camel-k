@@ -61,5 +61,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: Thank You for contributing!\n \n'$OLD_COVERAGE %-> $NEW_COVERAGE%\n Coverage Difference: %'
+              body: Thank You for contributing!\n \n'${OLD_COVERAGE}%-> ${NEW_COVERAGE}%\n Coverage Difference: %'
             })
