@@ -15,6 +15,7 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 # this comment  is for testing purposes
+#
 name: coverage report
 
 on:
@@ -44,9 +45,9 @@ jobs:
 
       - name: Extract Coverage
         run:
-          NEW_COVERAGE:=$(grep -o '[^(statements)\s]*$' coverage.out)
-          NEW_COVERAGE:=${$NEW_COVERAGE::-1}
-          OLD_COVERAGE:=$(grep -o '(?<=Coverage-)(.*)(?=%)' README.adoc)
+          newcoverage:=$(grep -o '[^(statements)\s]*$' coverage.out)
+
+          oldcoverage:=$(grep -o '(?<=Coverage-)(.*)(?=%)' README.adoc)
 
 
       - name: Comment 
@@ -58,5 +59,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '$OLD_COVERAGE %-> $NEW_COVERAGE  %\n Coverage Difference: %'
+              body: '$oldcoverage %-> $newcoverage %\n Coverage Difference: %'
             })
