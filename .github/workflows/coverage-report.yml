@@ -45,8 +45,8 @@ jobs:
 
       - name: Extract Coverage
         run:
-          newcoverage:=$(grep -o '[^(statements)\s]*$' coverage.out)
-          oldcoverage:=$(grep -o '(?<=Coverage-)(.*)(?=%)' README.adoc)
+          newcoverage=$(grep -o '[^(statements)\s]*$' coverage.out)
+          oldcoverage=$(grep -o '(?<=Coverage-)(.*)(?=%)' README.adoc)
 
 
       - name: Comment 
@@ -58,5 +58,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '$oldcoverage %-> $newcoverage %\n Coverage Difference: %'
+              body: '${oldcoverage} %-> ${newcoverage}%\n Coverage Difference: %'
             })
