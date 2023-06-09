@@ -20,10 +20,6 @@ name: coverage report
 on:
   pull_request:
 
-env:
-  NEW_COVERAGE: 0
-  OLD_COVERAGE: 0
-
 jobs:
   report:
     runs-on: ubuntu-latest
@@ -49,12 +45,15 @@ jobs:
       - name: Extract Coverage
         run:
           newcoverage=$(grep -o '[^(statements)\s]*$' coverage.out)
-          NEW_COVERAGE=${newcoverage::-1}
-          OLD_COVERAGE=$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)
+          newcoverage=${newcoverage::-1}
+          oldcoverage=$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)
 
 
       - name: Comment 
         uses: actions/github-script@v3
+        env:
+         NEW_COVERAGE: $newcoverage
+         OLD_COVERAGE: $oldcoverage
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
