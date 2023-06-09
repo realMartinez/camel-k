@@ -48,8 +48,13 @@ jobs:
           newcoverage=$(grep -o '[^(statements)\s]*$' coverage.out)
           newcoverage=${newcoverage::-1}
           oldcoverage=$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)
-          echo "old - $oldcoverage \n new - $newcoverage"
-
+          
+      - name: Create Comment Body
+        run:
+          cat > comment-body.md
+          echo 'Thank You for contributing!\n Coverage changed from:\n ${oldcoverage} -> ${newcoverage}'
+          
+          
 
 
       - name: Comment 
@@ -61,5 +66,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Thank You for contributing!\n \n $oldcoverage %-> $newcoverage %\n Coverage Difference: %'
+              body: 'comment-body.md'
             })
