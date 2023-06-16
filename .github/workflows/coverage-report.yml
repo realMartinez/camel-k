@@ -49,6 +49,9 @@ jobs:
           oldcoverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           echo "NEW_COV=$newcoverage" >> $GITHUB_ENV
           echo "OLD_COV=$oldcoverage" >> $GITHUB_ENV
+          echo "$GITHUB_CONTEXT"
+          echo "$env.OLD_COV"
+          echo "$env.NEW_COV"
 
       - name: Comment 
         uses: actions/github-script@v3
