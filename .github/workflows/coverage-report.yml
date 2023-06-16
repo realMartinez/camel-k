@@ -67,7 +67,10 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ':camel: **Thank You for contributing!** :camel:\n - Code coverage changed from: **${{env.OLD_COV}}** -> **${{env.NEW_COV}}**\n - Code coverage difference: **${{env.COV_DIFF}}**'
+              body: ':camel: **Thank You for contributing!** :camel:\n
+              **Code Coverage Report**\n 
+              - Coverage changed from: **${{env.OLD_COV}}%** -> **${{env.NEW_COV}}%**\n
+              - Coverage difference: **${{env.COV_DIFF}}%**'
             })
 
       - name: Comment - No Diff
@@ -80,5 +83,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ':camel: **Thank You for contributing!** :camel:\n - Code coverage unchanged.'
+              body: ':camel: **Thank You for contributing!** :camel:\n
+              **Code Coverage Report**\n
+              - Coverage unchanged.'
             })
