@@ -46,14 +46,10 @@ jobs:
       - name: Extract Coverage
         run:
           newcoverage=$(grep -o '[^(statements)\s]*$' coverage.out)
-          newcoverage=${newcoverage::-1}
+          newcoverage=${newcoverage::-1)
           oldcoverage=$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)
-          
-      - name: Create Comment Body
-        run:
-          touch comment-body.md
-          echo 'Thank You for contributing!\n Coverage changed from:\n ${oldcoverage} -> ${newcoverage}' > comment-body.md
-          echo comment-body.md
+          echo "NEW_COV=$newcoverage" >> $GITHUB_ENV
+          echo "OLD_COV=$oldcoverage" >> $GITHUB_ENV
 
       - name: Comment 
         uses: actions/github-script@v3
@@ -64,5 +60,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Thank You for contributing!\n Coverage changed from:\n ${oldcoverage} -> ${newcoverage}'
+              body: 'Thank You for contributing!\n Coverage changed from:\n {{ env.OLD_COV }}" -> ${{env.NEW_COV}}'
             })
