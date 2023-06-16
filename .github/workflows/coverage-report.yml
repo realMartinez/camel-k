@@ -46,9 +46,9 @@ jobs:
       - name: Extract Coverage
         shell: bash
         run: |
-          newcoverage=1
+          newcoverage="$(grep -o -P '(?<=\(statements\))(.+)(?=%)' coverage.out | xargs)"
           oldcoverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
-          coveragedifference=$((newcoverage-oldcoverage))
+          coveragedifference=$(bc <<< $newcoverage-$oldcoverage)
           echo "NEW_COV=$newcoverage" >> $GITHUB_ENV
           echo "OLD_COV=$oldcoverage" >> $GITHUB_ENV
           echo "COV_DIFF=$coveragedifference" >> $GITHUB_ENV
@@ -64,4 +64,3 @@ jobs:
               repo: context.repo.repo,
               body: 'Thank You for contributing!\n Coverage changed from: ${{env.OLD_COV}} -> ${{env.NEW_COV}}\n Coverage difference = ${{env.COV_DIFF}}'
             })
-#           newcoverage="$(grep -o '[^(statements)\s]*$' coverage.out)"
