@@ -46,14 +46,15 @@ jobs:
       - name: Extract Coverage
         shell: bash
         run: |
-          newcoverage="$(grep -o -P '(?<=\(statements\))(.+)(?=%)' coverage.out | xargs)"
-          oldcoverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
-          coveragedifference=$(bc <<< $newcoverage-$oldcoverage)
-          echo "NEW_COV=$newcoverage" >> $GITHUB_ENV
-          echo "OLD_COV=$oldcoverage" >> $GITHUB_ENV
-          echo "COV_DIFF=$coveragedifference" >> $GITHUB_ENV
+          new_coverage="$(grep -o -P '(?<=\(statements\))(.+)(?=%)' coverage.out | xargs)"
+          old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
+          coverage_difference=$(bc <<< $newcoverage-$oldcoverage)
+          echo "NEW_COV=$new_coverage" >> $GITHUB_ENV
+          echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
+          echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
 
-      - name: Comment 
+      - name: Comment - Diff
+        if: ${{env.COV_DIFF}} != 0
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -62,5 +63,18 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Thank You for contributing!\n Coverage changed from: ${{env.OLD_COV}} -> ${{env.NEW_COV}}\n Coverage difference = ${{env.COV_DIFF}}'
+              body: ':camel: **Thank You for contributing!** :camel:\n - Code coverage changed from: **${{env.OLD_COV}}** -> **${{env.NEW_COV}}**\n - Code coverage difference = **${{env.COV_DIFF}}**'
+            })
+
+      - name: Comment - No Diff
+        if: ${{env.COV_DIFF}} == 0
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: ':camel: **Thank You for contributing!** :camel:\n - Code coverage unchanged.'
             })
