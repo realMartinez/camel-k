@@ -47,7 +47,7 @@ jobs:
         shell: bash
         run: |
           newcoverage=1
-          oldcoverage=0
+          oldcoverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           coveragedifference=$((newcoverage-oldcoverage))
           echo "NEW_COV=$newcoverage" >> $GITHUB_ENV
           echo "OLD_COV=$oldcoverage" >> $GITHUB_ENV
@@ -65,4 +65,3 @@ jobs:
               body: 'Thank You for contributing!\n Coverage changed from: ${{env.OLD_COV}} -> ${{env.NEW_COV}}\n Coverage difference = ${{env.COV_DIFF}}'
             })
 #           newcoverage="$(grep -o '[^(statements)\s]*$' coverage.out)"
- #         oldcoverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
