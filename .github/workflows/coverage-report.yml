@@ -60,5 +60,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Thank You for contributing!\n Coverage changed from:\n {{ env.OLD_COV }}" -> ${{env.NEW_COV}}'
+              body: 'Thank You for contributing!\n Coverage changed from: ${{env.OLD_COV}} -> ${{env.NEW_COV}}'
             })
