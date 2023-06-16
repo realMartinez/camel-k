@@ -53,9 +53,9 @@ jobs:
           echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
           if [ $number -gt 0 ]
           then
-          old_coverage="\+ $old_coverage"
+          old_coverage="$old_coverage"
           fi
-          echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
+          echo "COV_DIFF=+$coverage_difference" >> $GITHUB_ENV
 
       - name: Comment - Diff
         if: ${{env.COV_DIFF  != '0'}}
