@@ -54,7 +54,7 @@ jobs:
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
 
       - name: Comment - Diff
-        if: ${{env.COV_DIFF}} != 0
+        if: ${{env.COV_DIFF  != '0'}}
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -67,7 +67,7 @@ jobs:
             })
 
       - name: Comment - No Diff
-        if: ${{env.COV_DIFF}} == 0
+        if: ${{env.COV_DIFF  == '0'}}
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
