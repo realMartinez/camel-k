@@ -44,11 +44,10 @@ jobs:
           go tool cover -func=coverage.out -o=coverage.out
 
       - name: Extract Coverage
-        run:
-#          newcoverage="$(grep -o '[^(statements)\s]*$' coverage.out)"
- #         oldcoverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
-          newcoverage=1
-          oldcoverage=0
+        shell: bash
+        run: |
+          newcoverage="$(grep -o '[^(statements)\s]*$' coverage.out)"
+          oldcoverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           coveragedifference=$((newcoverage-oldcoverage))
           echo "NEW_COV=$newcoverage" >> $GITHUB_ENV
           echo "OLD_COV=$oldcoverage" >> $GITHUB_ENV
