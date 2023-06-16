@@ -48,7 +48,7 @@ jobs:
         run: |
           new_coverage="$(grep -o -P '(?<=\(statements\))(.+)(?=%)' coverage.out | xargs)"
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
-          coverage_difference=$(bc <<< $newcoverage-$oldcoverage)
+          coverage_difference=$(bc <<< $new_coverage-$old_coverage)
           echo "NEW_COV=$new_coverage" >> $GITHUB_ENV
           echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
