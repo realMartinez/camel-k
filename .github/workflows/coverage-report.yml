@@ -45,8 +45,8 @@ jobs:
 
       - name: Extract Coverage
         run:
-          newcoverage=$(grep -o '[^(statements)\s]*$' coverage.out)
-          oldcoverage=$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)
+          newcoverage="$(grep -o '[^(statements)\s]*$' coverage.out)"
+          oldcoverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           echo "NEW_COV=$newcoverage" >> $GITHUB_ENV
           echo "OLD_COV=$oldcoverage" >> $GITHUB_ENV
 
