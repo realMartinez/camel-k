@@ -63,10 +63,6 @@ jobs:
           echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
 
-  comment:
-    needs: report
-    runs-on: ubuntu-latest 
-    steps:
       - name: Comment - Positive Difference
         if: ${{env.DIFF_TYPE  == 'PLUS'}}
         uses: actions/github-script@v3
