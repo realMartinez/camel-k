@@ -52,20 +52,26 @@ jobs:
           echo "NEW_COV=$new_coverage" >> $GITHUB_ENV
           echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
           
-
-          coverage_difference="$coverage_difference"
-
-          if [ $coverage_difference -gt 0 ]
-          then
-          echo "COV_DIFF=+$coverage_difference" >> $GITHUB_ENV
-          else
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
-          fi
 
-          
-
-      - name: Comment - Diff
-        if: ${{env.COV_DIFF  != '0'}}
+  comment:
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Comment - Positive Difference
+        if: ${{env.COV_DIFF  > '0'}}
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: ':camel: **Thank You for contributing!** :camel:\n**Code Coverage Report**\n - Coverage changed from: **${{env.OLD_COV}}%** -> **${{env.NEW_COV}}%**\n- Coverage difference: +**${{env.COV_DIFF}}%**'
+            })
+      
+      - name: Comment - Negative Difference
+        if: ${{env.COV_DIFF  < '0'}}
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -77,7 +83,7 @@ jobs:
               body: ':camel: **Thank You for contributing!** :camel:\n**Code Coverage Report**\n - Coverage changed from: **${{env.OLD_COV}}%** -> **${{env.NEW_COV}}%**\n- Coverage difference: **${{env.COV_DIFF}}%**'
             })
 
-      - name: Comment - No Diff
+      - name: Comment - No Difference
         if: ${{env.COV_DIFF  == '0'}}
         uses: actions/github-script@v3
         with:
