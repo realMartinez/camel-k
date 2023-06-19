@@ -67,35 +67,26 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: ':camel: **Thank You for contributing!** :camel:\n**Code Coverage Report**\n - Coverage changed from: **${{env.OLD_COV}}%** -> **${{env.NEW_COV}}%**\n- Coverage difference: +**${{env.COV_DIFF}}%**'
-            })
-      
-      - name: Comment - Negative Difference
-        if: ${{env.POS_DIFF == 'NEG'}}
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.createComment({
+
+            if(${{env.POS_DIFF  == 'POS'}}){
+              github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: ':camel: **Thank You for contributing!** :camel:\n**Code Coverage Report**\n - Coverage changed from: **${{env.OLD_COV}}%** -> **${{env.NEW_COV}}%**\n- Coverage difference: +**${{env.COV_DIFF}}%**'
+              })
+            }else if(${{env.POS_DIFF == 'NEG'}}){
+              github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: ':camel: **Thank You for contributing!** :camel:\n**Code Coverage Report**\n - Coverage changed from: **${{env.OLD_COV}}%** -> **${{env.NEW_COV}}%**\n- Coverage difference: **${{env.COV_DIFF}}%**'
-            })
-
-      - name: Comment - No Difference
-        if: ${{env.POS_DIFF  == 'ZERO'}}
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.createComment({
+              })
+            }else{
+              github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: ':camel: **Thank You for contributing!** :camel:\n**Code Coverage Report**\n- Coverage unchanged.'
-            })
+              })
+            }
