@@ -50,14 +50,11 @@ jobs:
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           coverage_difference=$(bc <<< $new_coverage-$old_coverage)
 
-          if [$coverage_difference -gt 0]
-          then
+          if [$coverage_difference -gt 0]; then
           echo "DIFF_TYPE=PLUS" >> $GITHUB_ENV
-          elif [$coverage_difference -lt 0]
-          then
+          elif [$coverage_difference -lt 0]; then
           echo "DIFF_TYPE=MINUS" >> $GITHUB_ENV
-          else
-          then
+          else; then
           echo "DIFF_TYPE=ZERO" >> $GITHUB_ENV
           fi
 
