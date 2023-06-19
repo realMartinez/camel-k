@@ -49,9 +49,9 @@ jobs:
           new_coverage="$(grep -o -P '(?<=\(statements\))(.+)(?=%)' coverage.out | xargs)"
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           coverage_difference=$(bc <<< $new_coverage-$old_coverage)
+
           echo "NEW_COV=$new_coverage" >> $GITHUB_ENV
           echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
-          
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
 
   comment:
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest 
     steps:
       - name: Comment - Positive Difference
-        if: ${{env.COV_DIFF  > '0'}}
+        if: ${{env.COV_DIFF  > 0}}
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -72,7 +72,7 @@ jobs:
             })
       
       - name: Comment - Negative Difference
-        if: ${{env.COV_DIFF  < '0'}}
+        if: ${{env.COV_DIFF  < 0}}
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -85,7 +85,7 @@ jobs:
             })
 
       - name: Comment - No Difference
-        if: ${{env.COV_DIFF  == '0'}}
+        if: ${{env.COV_DIFF  == 0}}
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
