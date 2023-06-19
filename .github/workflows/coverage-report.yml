@@ -51,7 +51,7 @@ jobs:
           coverage_difference=$(bc <<< $new_coverage-$old_coverage)
 
           if [$coverage_difference -gt 0]; then
-          echo "POS_DIFF=true >> $GITHUB_ENV
+          echo "POS_DIFF=true" >> $GITHUB_ENV
           fi
 
           echo "NEW_COV=$new_coverage" >> $GITHUB_ENV
