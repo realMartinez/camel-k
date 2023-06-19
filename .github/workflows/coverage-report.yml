@@ -50,9 +50,11 @@ jobs:
           coverage_difference=$(bc <<< $new_coverage-$old_coverage)
 
           if (( $(echo "$coverage_difference > 0" |bc -l) )); then
-          echo "POS_DIFF=true" >> $GITHUB_ENV
+          echo "POS_DIFF=POS" >> $GITHUB_ENV
           elif (( $(echo "$coverage_difference < 0" |bc -l) )); then
-          echo "POS_DIFF=false" >> $GITHUB_ENV
+          echo "POS_DIFF=NEG" >> $GITHUB_ENV
+          else
+          echo "POS_DIFF=ZERO" >> $GITHUB_ENV
           fi
 
           echo "NEW_COV=$new_coverage" >> $GITHUB_ENV
@@ -60,7 +62,7 @@ jobs:
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
 
       - name: Comment - Positive Difference
-        if: ${{env.POS_DIFF  == 'true'}}
+        if: ${{env.POS_DIFF  == 'POS'}}
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -73,7 +75,7 @@ jobs:
             })
       
       - name: Comment - Negative Difference
-        if: ${{env.POS_DIFF == 'false'}}
+        if: ${{env.POS_DIFF == 'NEG'}}
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -86,7 +88,7 @@ jobs:
             })
 
       - name: Comment - No Difference
-        if: ${{env.COV_DIFF  == '0'}}
+        if: ${{env.POS_DIFF  == 'ZERO'}}
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
