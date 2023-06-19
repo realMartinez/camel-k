@@ -54,7 +54,7 @@ jobs:
           echo "DIFF_TYPE=PLUS" >> $GITHUB_ENV
           elif [$coverage_difference -lt 0]; then
           echo "DIFF_TYPE=MINUS" >> $GITHUB_ENV
-          else; then
+          else
           echo "DIFF_TYPE=ZERO" >> $GITHUB_ENV
           fi
 
