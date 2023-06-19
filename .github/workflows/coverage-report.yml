@@ -55,7 +55,7 @@ jobs:
 
           coverage_difference="$coverage_difference"
 
-          if [ $number -gt 0 ]
+          if [ $coverage_difference -gt 0 ]
           then
           echo "COV_DIFF=+$coverage_difference" >> $GITHUB_ENV
           else
