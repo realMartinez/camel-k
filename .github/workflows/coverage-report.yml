@@ -55,6 +55,7 @@ jobs:
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
 
   comment:
+    needs: report
     runs-on: ubuntu-latest 
     steps:
       - name: Comment - Positive Difference
