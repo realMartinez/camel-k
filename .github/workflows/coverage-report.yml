@@ -52,12 +52,16 @@ jobs:
           echo "NEW_COV=$new_coverage" >> $GITHUB_ENV
           echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
           
+
+          coverage_difference="$coverage_difference"
+
           if [ $number -gt 0 ]
           then
-          coverage_difference="plus1 $coverage_difference"
+          echo "COV_DIFF=+$coverage_difference" >> $GITHUB_ENV
+          else
+          echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
           fi
 
-          echo "COV_DIFF=plus $coverage_difference" >> $GITHUB_ENV
           
 
       - name: Comment - Diff
