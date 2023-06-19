@@ -50,9 +50,9 @@ jobs:
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           coverage_difference=$(bc <<< $new_coverage-$old_coverage)
 
-          if (( $(echo "$num1 > 0" |bc -l) ))
+          if (( $(echo "$num1 > 0" |bc -l) )); then
           echo "POS_DIFF=true" >> $GITHUB_ENV
-          elif (( $(echo "$num1 < 0" |bc -l) ))
+          elif (( $(echo "$num1 < 0" |bc -l) )); then
           echo "POS_DIFF=false" >> $GITHUB_ENV
           fi
 
