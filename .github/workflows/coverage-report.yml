@@ -61,8 +61,7 @@ jobs:
           echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
 
-      - name: Comment - Positive Difference
-        if: ${{env.POS_DIFF  == 'POS'}}
+      - name: Comment
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
