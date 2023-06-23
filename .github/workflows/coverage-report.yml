@@ -41,12 +41,11 @@ jobs:
         shell: bash
         run: |
           git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
-          cd ${{ github.event.repository.name }}
+          mv ${{ github.event.repository.name }} ./target
+          cd target
           git checkout ${{ github.event.pull_request.head.ref }}
           CWD="$(pwd)"
           echo $CWD
-          InDir="$(ls)"
-          echo $InDir
 
       - name: Run Test
         run: |
