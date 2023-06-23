@@ -42,6 +42,10 @@ jobs:
           git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
           cd ${{ github.event.repository.name }}
           git checkout ${{ github.event.pull_request.head.ref }}
+          CWD="$(pwd)"
+          echo $CWD
+          InDir="$(ls)"
+          echo $InDir
 
       - name: Run Test
         run: |
