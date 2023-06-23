@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. 
 # ---------------------------------------------------------------------------
-# Test Comment 1
+# test
+
 name: coverage report
 
 on:
@@ -30,18 +31,18 @@ jobs:
 
     steps:
 
+      - name: Setup go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+          check-latest: true
+
       - name: Checkout
         shell: bash
         run: |
           git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
           cd ${{ github.event.repository.name }}
           git checkout ${{ github.event.pull_request.head.ref }}
-      
-      - name: Setup go
-        uses: actions/setup-go@v3
-        with:
-          go-version: '1.18'
-          check-latest: true
 
       - name: Run Test
         run: |
