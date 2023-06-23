@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. 
 # ---------------------------------------------------------------------------
-# test 1
+# test 
 
 name: coverage report
 
@@ -41,9 +41,9 @@ jobs:
         shell: bash
         run: |
           git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
-          mv ${{ github.event.repository.name }} ./target
-          cd target
+          cd ${{ github.event.repository.name }} 
           git checkout ${{ github.event.pull_request.head.ref }}
+
           CWD="$(pwd)"
           echo $CWD
 
