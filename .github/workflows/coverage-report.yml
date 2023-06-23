@@ -35,7 +35,7 @@ jobs:
         run: |
           git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
           cd ${{ github.event.repository.name }}
-          git checkout ${{ github.event.pull_request.base.ref }}
+          git checkout ${{ github.event.pull_request.head.ref }}
       
       - name: Setup go
         uses: actions/setup-go@v3
