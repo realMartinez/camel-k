@@ -35,9 +35,9 @@ jobs:
         run: |
           git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
           cd ${{ github.event.repository.name }}
-          git remote add upstream ${{ github.event.pull_request.base.ref }}
-          git checkout ${{ github.event.pull_request.head.ref }}
-          git pull --rebase ${{ github.event.pull_request.base.ref }}
+          git add remote upstream ${{ github.event.pull_request.head.ref }}
+          git checkout ${{ github.event.pull_request.base.ref }}
+          git pull --rebase ${{ github.event.pull_request.head.ref }}
       
       - name: Setup go
         uses: actions/setup-go@v3
