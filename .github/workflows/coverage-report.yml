@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. 
 # ---------------------------------------------------------------------------
-# Test Comment 1
+# Test Comment 
 name: coverage report
 
 on:
@@ -34,7 +34,7 @@ jobs:
         shell: bash
         run: |
           git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
-          cd $GITHUB_REPOSITORY"
+          cd $GITHUB_REPOSITORY
           git add remote upstream ${{ github.event.pull_request.base.ref }}
           git checkout ${{ github.event.pull_request.head.ref }}
           git pull --rebase ${{ github.event.pull_request.base.ref }}
