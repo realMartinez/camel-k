@@ -36,18 +36,25 @@ jobs:
           go-version: '1.18'
           check-latest: true
 
-      - name: Get Coverage
+      - uses: actions/checkout@v3
+        with:
+          ref: https://github.com/apache/camel-k.git
+          sparse-checkout: |
+            README.adoc
+          sparse-checkout-cone-mode: false
+
+      - name: Get Old Coverage
         shell: bash
         run: |
-          git clone https://github.com/apache/camel-k.git 
-          cd ${{ github.event.repository.name }}
-
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
 
-          git remote add upstream "$GITHUB_REPOSITORY"
-          git checkout ${{ github.event.pull_request.head.ref }}
-          git pull --rebase
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
+      - name: Get New Coverage
+        shell: bash
+        run: |
           go test -v ./... -covermode=count -coverprofile=coverage.out
           go tool cover -func=coverage.out -o=coverage.out
 
