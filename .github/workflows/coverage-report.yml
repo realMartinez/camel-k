@@ -39,14 +39,14 @@ jobs:
       - name: Get Coverage
         shell: bash
         run: |
-          git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
-          cd ${{ github.event.repository.name }} 
+          git clone https://github.com/apache/camel-k.git 
+          cd ${{ github.event.repository.name }}
 
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
 
-          git remote add upstream https://github.com/apache/camel-k.git
+          git remote add upstream "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
           git checkout ${{ github.event.pull_request.head.ref }}
-          git pull --rebase upstream/main
+          git pull --rebase
 
           go test -v ./... -covermode=count -coverprofile=coverage.out
           go tool cover -func=coverage.out -o=coverage.out
