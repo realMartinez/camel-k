@@ -48,7 +48,7 @@ jobs:
       - name: Get New Coverage
         shell: bash
         run: |
-          git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY_OWNER/${{github.event.pull_request.base.ref}}"
+          git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY_OWNER/camel-k/tree/${{github.event.pull_request.base.ref}}"
           git add remote upstream https://github.com/apache/camel-k.git
           git checkout origin/$GITHUB_REF_NAME
           git pull --rebase upstream/main
