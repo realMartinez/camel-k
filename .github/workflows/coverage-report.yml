@@ -47,7 +47,7 @@ jobs:
           
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ GITHUB_REF }}
 
       - name: Get New Coverage
         shell: bash
