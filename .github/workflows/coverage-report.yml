@@ -44,8 +44,6 @@ jobs:
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           cd ..
           rm -rf camel-k
-          echo $old_coverage
-          echo $new_coverage
           
       - uses: actions/checkout@v3
         with:
@@ -58,6 +56,10 @@ jobs:
           go tool cover -func=coverage.out -o=coverage.out
 
           new_coverage="$(grep -o -P '(?<=\(statements\))(.+)(?=%)' coverage.out | xargs)"
+
+          echo $old_coverage
+          echo $new_coverage
+
           coverage_difference=$(bc <<< $new_coverage-$old_coverage)
 
           if (( $(echo "$coverage_difference > 0" |bc -l) )); then
