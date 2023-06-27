@@ -44,7 +44,7 @@ jobs:
 
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
 
-          git remote add upstream "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+          git remote add upstream "$GITHUB_REPOSITORY"
           git checkout ${{ github.event.pull_request.head.ref }}
           git pull --rebase
 
