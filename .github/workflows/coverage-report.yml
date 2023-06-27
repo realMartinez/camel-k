@@ -44,7 +44,7 @@ jobs:
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           cd ..
           rm -rf camel-k
-          
+
       - name: Checkout
         uses: actions/checkout@v3
 
