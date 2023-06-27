@@ -42,6 +42,8 @@ jobs:
           git clone https://github.com/apache/camel-k.git
           cd camel-k
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
+          cd ..
+          rm -rf camel-k
           echo $old_coverage
           echo $new_coverage
           
