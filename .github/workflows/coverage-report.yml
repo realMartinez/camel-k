@@ -44,10 +44,9 @@ jobs:
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           cd ..
           rm -rf camel-k
-          
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ GITHUB_REF }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Get New Coverage
         shell: bash
