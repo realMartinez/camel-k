@@ -53,6 +53,7 @@ jobs:
           cd camel-k
           git remote add upstream https://github.com/apache/camel-k.git
           git checkout ${{ github.event.pull_request.head.ref }}
+          git fetch upstream
           git pull --rebase upstream main
 
           go test -v ./... -covermode=count -coverprofile=coverage.out
