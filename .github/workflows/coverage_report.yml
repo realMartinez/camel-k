@@ -38,9 +38,9 @@ jobs:
 
       - name: Get Old Coverage
         shell: bash
+        working-directory: camel-k
         run: |
           git clone https://github.com/apache/camel-k.git
-          cd camel-k
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           cd ..
           rm -rf camel-k
@@ -54,11 +54,11 @@ jobs:
 
       - name: Commit
         shell: bash
+        working-directory: camel-k
         env:
           CI_USER: "github-actions[bot]"
           CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
         run: |
-          cd camel-k
           git config --local user.email "$CI_EMAIL"
           git config --local user.name "$CI_USER"
           git remote add upstream https://github.com/apache/camel-k.git
@@ -67,18 +67,19 @@ jobs:
           
       - name: Push and Rebase
         shell: bash
+        working-directory: camel-k
         if: env.pr_changes == 1
         env:
           CI_USER: "github-actions[bot]"
           CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
           CI_TOKEN: ${{ inputs.secretGithubToken }}
         run: |
-          cd camel-k
           git push "https://$CI_USER:$CI_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:${{ inputs.branch-ref }}
           git pull --rebase upstream main || git rebase --abort && echo "rebaseAborted=1" >> $GITHUB_ENV
 
       - name: Get New Coverage
         shell: bash
+        working-directory: camel-k
         if: env.rebaseAborted != 1
         env:
           CI_USER: "github-actions[bot]"
