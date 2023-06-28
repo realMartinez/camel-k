@@ -45,14 +45,15 @@ jobs:
           cd ..
           rm -rf camel-k
 
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          
       - name: Get New Coverage
         shell: bash
         run: |
-          git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY_OWNER/camel-k/tree/${{github.event.pull_request.base.ref}}"
-          git add remote upstream https://github.com/apache/camel-k.git
-          git checkout origin/$GITHUB_REF_NAME
-          git pull --rebase upstream/main
-
           go test -v ./... -covermode=count -coverprofile=coverage.out
           go tool cover -func=coverage.out -o=coverage.out
 
