@@ -38,9 +38,9 @@ jobs:
 
       - name: Get Old Coverage
         shell: bash
-        working-directory: ./camel-k
         run: |
           git clone https://github.com/apache/camel-k.git
+          cd camel-k
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           cd ..
           rm -rf camel-k
