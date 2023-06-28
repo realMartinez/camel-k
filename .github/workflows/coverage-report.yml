@@ -67,7 +67,6 @@ jobs:
       - name: Rebase
         shell: bash
         working-directory: ./camel-k
-        if: env.pr_changes == 1
         env:
           CI_USER: "github-actions[bot]"
           CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
