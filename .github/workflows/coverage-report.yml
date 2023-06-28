@@ -51,6 +51,8 @@ jobs:
         run: |
           git clone ${{github.server_url}}/${{ github.repository }}.git
           cd camel-k
+          git config --local user.email "$CI_EMAIL"
+          git config --local user.name "$CI_USER"
           git remote add upstream https://github.com/apache/camel-k.git
           git checkout ${{ github.event.pull_request.head.ref }}
           git fetch upstream
@@ -83,8 +85,6 @@ jobs:
           CI_TOKEN: ${{ inputs.secretGithubToken }}
         run: |
           cd camel-k
-          git config --local user.email "$CI_EMAIL"
-          git config --local user.name "$CI_USER"
           git pull --rebase upstream main
 
           go test -v ./... -covermode=count -coverprofile=coverage.out
