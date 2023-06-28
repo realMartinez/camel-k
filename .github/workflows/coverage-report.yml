@@ -61,6 +61,7 @@ jobs:
           CI_USER: "github-actions[bot]"
           CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
         run: |
+          cd camel-k
           git add camel-k-sbom/camel-k-sbom.json && git commit -m 'chore: coverage report PR changes' && echo "pr_changes=1" >> $GITHUB_ENV || echo "No changes to PR"
           
       - name: Push changes
@@ -71,12 +72,13 @@ jobs:
           CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
           CI_TOKEN: ${{ inputs.secretGithubToken }}
         run: |
+          cd camel-k
           git push "https://$CI_USER:$CI_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:${{ inputs.branch-ref }}
 
       - name: Get New Coverage
         shell: bash
         run: |
-
+          cd camel-k
           git pull --rebase upstream main
 
           go test -v ./... -covermode=count -coverprofile=coverage.out
