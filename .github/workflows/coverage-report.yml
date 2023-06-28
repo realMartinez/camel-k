@@ -50,6 +50,7 @@ jobs:
         run: |
 
           git clone ${{github.server_url}}/${{ github.repository }}.git
+          cd camel-k
           git remote add upstream https://github.com/apache/camel-k.git
           git checkout ${{ github.event.pull_request.head.ref }}
           git pull --rebase upstream/main
