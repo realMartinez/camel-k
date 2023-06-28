@@ -77,8 +77,14 @@ jobs:
 
       - name: Get New Coverage
         shell: bash
+        env:
+          CI_USER: "github-actions[bot]"
+          CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
+          CI_TOKEN: ${{ inputs.secretGithubToken }}
         run: |
           cd camel-k
+          git config --local user.email "$CI_EMAIL"
+          git config --local user.name "$CI_USER"
           git pull --rebase upstream main
 
           go test -v ./... -covermode=count -coverprofile=coverage.out
