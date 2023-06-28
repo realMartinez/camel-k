@@ -38,7 +38,7 @@ jobs:
 
       - name: Get Old Coverage
         shell: bash
-        working-directory: camel-k
+        working-directory: ./camel-k
         run: |
           git clone https://github.com/apache/camel-k.git
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
@@ -54,7 +54,7 @@ jobs:
 
       - name: Commit
         shell: bash
-        working-directory: camel-k
+        working-directory: ./camel-k
         env:
           CI_USER: "github-actions[bot]"
           CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
@@ -67,7 +67,7 @@ jobs:
           
       - name: Push and Rebase
         shell: bash
-        working-directory: camel-k
+        working-directory: ./camel-k
         if: env.pr_changes == 1
         env:
           CI_USER: "github-actions[bot]"
@@ -79,7 +79,7 @@ jobs:
 
       - name: Get New Coverage
         shell: bash
-        working-directory: camel-k
+        working-directory: ./camel-k
         if: env.rebaseAborted != 1
         env:
           CI_USER: "github-actions[bot]"
