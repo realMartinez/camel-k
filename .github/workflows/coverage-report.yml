@@ -62,7 +62,7 @@ jobs:
           cd camel-k
           git config --local user.email "$CI_EMAIL"
           git config --local user.name "$CI_USER"
-          git remote add upstream https://github.com/realMartinez/camel-k/tree/feat/coverage_report.git
+          git remote add upstream https://github.com/apache/camel-k.git
           git fetch upstream
           git add -A && git commit -m 'chore: coverage report PR changes' && echo "pr_changes=1" >> $GITHUB_ENV || echo "No changes to PR"
           
