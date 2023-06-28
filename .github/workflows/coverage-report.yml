@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. 
 # ---------------------------------------------------------------------------
-# test
+# test 1
 name: coverage report
 
 on:
@@ -64,7 +64,7 @@ jobs:
           git config --local user.name "$CI_USER"
           git remote add upstream https://github.com/apache/camel-k.git
           git fetch upstream
-          git add -A && git commit -m 'chore: coverage report PR changes' && echo "pr_changes=1" >> $GITHUB_ENV || echo "No changes to PR"
+          git add --all && git commit -m 'chore: coverage report PR changes' && echo "pr_changes=1" >> $GITHUB_ENV || echo "No changes to PR"
           
       - name: Push changes
         shell: bash
