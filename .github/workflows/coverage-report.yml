@@ -51,8 +51,6 @@ jobs:
         run: |
           git clone ${{github.server_url}}/${{ github.repository }}.git
           cd camel-k
-          git config --local user.email "$CI_EMAIL"
-          git config --local user.name "$CI_USER"
           git remote add upstream https://github.com/apache/camel-k.git
           git checkout ${{ github.event.pull_request.head.ref }}
           git fetch upstream
@@ -64,6 +62,8 @@ jobs:
           CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
         run: |
           cd camel-k
+          git config --local user.email "$CI_EMAIL"
+          git config --local user.name "$CI_USER"
           git add camel-k-sbom/camel-k-sbom.json && git commit -m 'chore: coverage report PR changes' && echo "pr_changes=1" >> $GITHUB_ENV || echo "No changes to PR"
           
       - name: Push changes
