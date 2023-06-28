@@ -65,7 +65,7 @@ jobs:
           git fetch upstream
           git add --all && git commit -m 'chore: coverage report PR changes' && echo "pr_changes=1" >> $GITHUB_ENV || echo "No changes to PR"
           
-      - name: Push changes
+      - name: Push and Rebase
         shell: bash
         if: env.pr_changes == 1
         env:
@@ -75,17 +75,16 @@ jobs:
         run: |
           cd camel-k
           git push "https://$CI_USER:$CI_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:${{ inputs.branch-ref }}
+          git pull --rebase upstream main || git rebase --abort && echo "rebaseAborted=1" >> $GITHUB_ENV
 
       - name: Get New Coverage
         shell: bash
+        if: env.rebaseAborted != 1
         env:
           CI_USER: "github-actions[bot]"
           CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
           CI_TOKEN: ${{ inputs.secretGithubToken }}
         run: |
-          cd camel-k
-          git pull --rebase upstream main
-
           go test -v ./... -covermode=count -coverprofile=coverage.out
           go tool cover -func=coverage.out -o=coverage.out
 
@@ -109,7 +108,8 @@ jobs:
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
          
 
-      - name: Comment
+      - name: Comment Coverage
+        if: env.rebaseAborted != 1
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -137,3 +137,15 @@ jobs:
               body: ':camel: **Thank You for contributing!** :camel: \n\n  **Code Coverage Report** :heavy_check_mark:\n - Coverage unchanged.'
               })
             }
+
+      - name: Comment Merge Conflicts
+        if: env.rebaseAborted == 1
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: ':camel: **Thank You for contributing!** :camel: \n\n  Unable to create **Coverage Report** :warning:. \n Merge conflicts found.'
