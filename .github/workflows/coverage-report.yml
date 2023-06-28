@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. 
 # ---------------------------------------------------------------------------
-# test 
+
 name: coverage report
 
 on:
@@ -148,3 +148,4 @@ jobs:
                 repo: context.repo.repo,
                 body: ':camel: **Thank You for contributing!** :camel: \n\n  Unable to create **Coverage Report** :warning:. \n Merge conflicts found.'
                 })
+
