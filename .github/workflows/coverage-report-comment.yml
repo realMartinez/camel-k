@@ -15,11 +15,11 @@
 # limitations under the License. 
 # ---------------------------------------------------------------------------
 
-name: coverage report comment
+name: coverage-report-comment
 
 on:
   workflow_run:
-    workflows: ["coverage report"]
+    workflows: ["coverage-report"]
     types:
       - completed
 

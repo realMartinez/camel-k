@@ -15,7 +15,7 @@
 # limitations under the License. 
 # ---------------------------------------------------------------------------
 #test
-name: coverage report
+name: coverage-report
 
 on:
   pull_request_target:
