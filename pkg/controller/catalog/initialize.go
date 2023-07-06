@@ -39,6 +39,7 @@ import (
 	"github.com/apache/camel-k/v2/pkg/util"
 	"github.com/apache/camel-k/v2/pkg/util/defaults"
 	"github.com/apache/camel-k/v2/pkg/util/kubernetes"
+	"github.com/apache/camel-k/v2/pkg/util/openshift"
 	"github.com/apache/camel-k/v2/pkg/util/s2i"
 
 	spectrum "github.com/container-tools/spectrum/pkg/builder"
@@ -101,9 +102,14 @@ func (action *initializeAction) Handle(ctx context.Context, catalog *v1.CamelCat
 
 func initializeSpectrum(options spectrum.Options, ip *v1.IntegrationPlatform, catalog *v1.CamelCatalog) (*v1.CamelCatalog, error) {
 	target := catalog.DeepCopy()
+	organization := ip.Status.Build.Registry.Organization
+	if organization == "" {
+		organization = catalog.Namespace
+	}
 	imageName := fmt.Sprintf(
-		"%s/camel-k-runtime-%s-builder:%s",
+		"%s/%s/camel-k-runtime-%s-builder:%s",
 		ip.Status.Build.Registry.Address,
+		organization,
 		catalog.Spec.Runtime.Provider,
 		strings.ToLower(catalog.Spec.Runtime.Version),
 	)
@@ -172,13 +178,15 @@ func initializeS2i(ctx context.Context, c client.Client, ip *v1.IntegrationPlatf
 	)
 	imageTag := strings.ToLower(catalog.Spec.Runtime.Version)
 
+	uidStr := getS2iUserID(ctx, c, ip, catalog)
+
 	// Dockfile
 	dockerfile := string([]byte(`
 		FROM ` + catalog.Spec.GetQuarkusToolingImage() + `
-		USER 1001
-		ADD /usr/local/bin/kamel /usr/local/bin/kamel
-		ADD /usr/share/maven/mvnw/ /usr/share/maven/mvnw/
-		ADD ` + defaults.LocalRepository + ` ` + defaults.LocalRepository + `
+		USER ` + uidStr + `:0
+		ADD --chown=` + uidStr + `:0 /usr/local/bin/kamel /usr/local/bin/kamel
+		ADD --chown=` + uidStr + `:0 /usr/share/maven/mvnw/ /usr/share/maven/mvnw/
+		ADD --chown=` + uidStr + `:0 ` + defaults.LocalRepository + ` ` + defaults.LocalRepository + `
 	`))
 
 	owner := catalogReference(catalog)
@@ -556,4 +564,17 @@ func catalogReference(catalog *v1.CamelCatalog) *unstructured.Unstructured {
 	owner.SetAPIVersion(catalog.APIVersion)
 	owner.SetKind(catalog.Kind)
 	return owner
+}
+
+// get user id from security context constraint configuration in namespace if present.
+func getS2iUserID(ctx context.Context, c client.Client, ip *v1.IntegrationPlatform, catalog *v1.CamelCatalog) string {
+	ugfidStr := "1001"
+	if ip.Status.Cluster == v1.IntegrationPlatformClusterOpenShift {
+		uidStr, err := openshift.GetOpenshiftUser(ctx, c, catalog.GetNamespace())
+		if err != nil {
+			Log.Error(err, "Unable to retieve an Openshift user and group Ids.")
+		}
+		return uidStr
+	}
+	return ugfidStr
 }

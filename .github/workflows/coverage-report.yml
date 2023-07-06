@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. 
 # ---------------------------------------------------------------------------
-#test
+
 name: coverage report
 
 on:
@@ -46,38 +46,14 @@ jobs:
           rm -rf camel-k
 
       - name: Checkout
-        shell: bash
-        run: |
-          git clone ${{github.server_url}}/${{ github.repository }}.git
-          cd camel-k
-          git checkout ${{ github.event.pull_request.head.ref }}
-
-      - name: Fetch
-        shell: bash
-        working-directory: ./camel-k
-        env:
-          CI_USER: "github-actions[bot]"
-          CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
-        run: |
-          git config --local user.email "$CI_EMAIL"
-          git config --local user.name "$CI_USER"
-          git remote add upstream https://github.com/apache/camel-k.git
-          git fetch upstream
-          
-      - name: Rebase
-        shell: bash
-        working-directory: ./camel-k
-        env:
-          CI_USER: "github-actions[bot]"
-          CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
-          CI_TOKEN: ${{ inputs.secretGithubToken }}
-        run: |
-          git pull --rebase upstream main || git rebase --abort && echo "rebaseAborted=1" >> $GITHUB_ENV
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
 
       - name: Get New Coverage
         shell: bash
         working-directory: ./camel-k
-        if: env.rebaseAborted != 1
         env:
           CI_USER: "github-actions[bot]"
           CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
@@ -105,47 +81,3 @@ jobs:
           echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
          
-
-      - name: Comment Coverage
-        if: env.rebaseAborted != 1
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-
-            if(${{env.POS_DIFF  == 'POS'}}){
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: ':camel: **Thank You for contributing!** :camel: \n\n  **Code Coverage Report** :heavy_check_mark:\n - Coverage changed from: **${{env.OLD_COV}}%** -> **${{env.NEW_COV}}%**\n- Coverage difference: +**${{env.COV_DIFF}}%**'
-              })
-            }else if(${{env.POS_DIFF == 'NEG'}}){
-              github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: ':camel: **Thank You for contributing!** :camel: \n\n  **Code Coverage Report** :warning:\n - Coverage changed from: **${{env.OLD_COV}}%** -> **${{env.NEW_COV}}%**\n- Coverage difference: **${{env.COV_DIFF}}%**'
-              })
-            }else{
-              github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: ':camel: **Thank You for contributing!** :camel: \n\n  **Code Coverage Report** :heavy_check_mark:\n - Coverage unchanged.'
-              })
-            }
-
-      - name: Comment Merge Conflicts
-        if: env.rebaseAborted == 1
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: ':camel: **Thank You for contributing!** :camel: \n\n  Unable to create **Coverage Report** :warning:. \n Merge conflicts found.'
-                })
-
