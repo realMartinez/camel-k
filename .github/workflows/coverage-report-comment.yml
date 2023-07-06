@@ -15,7 +15,7 @@
 # limitations under the License. 
 # ---------------------------------------------------------------------------
 
-name: coverage report
+name: coverage report comment
 
 on:
   workflow_run:
