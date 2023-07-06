@@ -53,11 +53,6 @@ jobs:
 
       - name: Get New Coverage
         shell: bash
-        working-directory: ./camel-k
-        env:
-          CI_USER: "github-actions[bot]"
-          CI_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
-          CI_TOKEN: ${{ inputs.secretGithubToken }}
         run: |
           go test -v ./... -covermode=count -coverprofile=coverage.out
           go tool cover -func=coverage.out -o=coverage.out
