@@ -21,7 +21,7 @@ on:
   workflow_run:
     workflows: ["coverage report"]
     types:
-      . completed
+      - completed
 
 jobs:
   report:
