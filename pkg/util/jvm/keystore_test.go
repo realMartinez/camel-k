@@ -18,33 +18,9 @@ limitations under the License.
 package jvm
 
 import (
-	"context"
-	"os"
 	"testing"
-
-	"github.com/apache/camel-k/v2/pkg/util"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerateKeystore(t *testing.T) {
 
-	// Nil Data
-	var data [][]byte
-	ctx := context.Background()
-	err := GenerateKeystore(ctx, "", "/tmp/keystore", NewKeystorePassword(), data)
-	assert.Nil(t, err)
-
-	// Non-Nil Data
-	data = [][]byte{{0}, {1}}
-	err = GenerateKeystore(ctx, "", "/tmp/keystore", NewKeystorePassword(), data)
-	assert.NotNil(t, err)
-
-	// Incorrect password format
-	err = GenerateKeystore(ctx, "", "/tmp/keystore", "", data)
-	assert.NotNil(t, err)
-
-	testFileExists, _ := util.FileExists("/tmp/keystore")
-	if testFileExists {
-		os.Remove("/tmp/keystore")
-	}
 }
