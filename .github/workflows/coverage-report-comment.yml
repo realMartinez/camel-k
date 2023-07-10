@@ -62,14 +62,14 @@ jobs:
             var NEW_COV = Number(fs.readFileSync('./NEW_COV'));
             var COV_DIFF = Number(fs.readFileSync('./COV_DIFF'));
 
-            if(${{POS_DIFF  == 'POS'}}){
+            if( POS_DIFF  == 'POS'){
               github.rest.issues.createComment({
                 issue_number: issue_number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: ':camel: **Thank you for contributing!** :camel: \n\n  **Code Coverage Report** :heavy_check_mark:\n - Coverage changed from: **${{OLD_COV}}%** -> **${{NEW_COV}}%**\n- Coverage difference: +**${{COV_DIFF}}%**'
               })
-            }else if(${{POS_DIFF == 'NEG'}}){
+            }else if(POS_DIFF == 'NEG'){
               github.rest.issues.createComment({
               issue_number: issue_number,
               owner: context.repo.owner,
