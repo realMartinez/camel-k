@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. 
 # ---------------------------------------------------------------------------
-#test
+
 name: coverage-report
 
 on:
@@ -39,11 +39,12 @@ jobs:
       - name: Get Old Coverage
         shell: bash
         run: |
-          git clone https://github.com/apache/camel-k.git
-          cd camel-k
+          git clone https://github.com/apache/camel-k.git 
+          cd camel-k 
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           cd ..
           rm -rf camel-k
+          echo $old_coverage
 
       - name: Checkout
         uses: actions/checkout@v3
