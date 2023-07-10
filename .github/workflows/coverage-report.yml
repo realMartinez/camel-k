@@ -68,7 +68,7 @@ jobs:
           new_coverage="$(grep -o -P '(?<=\(statements\))(.+)(?=%)' coverage.out | xargs)"
           echo "NEW_COV=$new_coverage" >> $GITHUB_ENV
           
-          coverage_difference=$(bc <<< (${{env.NEW_COV}}-${{env.OLD_COV)}})
+          coverage_difference=$(bc <<< (${{env.NEW_COV}}-${{env.OLD_COV}}))
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
 
           if (( $(echo "$coverage_difference > 0" |bc -l) )); then
