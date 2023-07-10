@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. 
 # ---------------------------------------------------------------------------
-
+# test
 name: coverage-report
 
 on:
@@ -39,6 +39,7 @@ jobs:
       - name: Checkout apache repo
         uses: actions/checkout@v3
         with:
+          fetch-depth: 0
           repository: apache/camel-k
           path: old
 
