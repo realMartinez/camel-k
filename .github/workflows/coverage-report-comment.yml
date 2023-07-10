@@ -81,6 +81,6 @@ jobs:
               issue_number: issue_number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ':camel: **Thank you for contributing!** :camel: \n\n  **Code Coverage Report** :heavy_check_mark:\n - Coverage unchanged. \n - Coverage changed from: **${OLD_COV}%** -> **${NEW_COV}%**\n- Coverage difference: **${COV_DIFF}%**  ${POS_DIFF}'
+              body: `:camel: **Thank you for contributing!** :camel: \n\n  **Code Coverage Report** :heavy_check_mark:\n - Coverage unchanged. \n - Coverage changed from: **${OLD_COV}%** -> **${NEW_COV}%**\n- Coverage difference: **${COV_DIFF}%**  ${POS_DIFF}`
               })
             }
