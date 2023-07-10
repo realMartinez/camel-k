@@ -46,7 +46,9 @@ jobs:
       - name: Get Old Coverage
         shell: bash
         run: |
+          ls
           cd old
+          ls
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           cd ..
 
