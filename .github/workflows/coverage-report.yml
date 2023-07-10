@@ -36,21 +36,24 @@ jobs:
           go-version: '1.18'
           check-latest: true
 
+      - name: Checkout apache repo
+        uses: actions/checkout@v3
+        with:
+          repository: apache/camel-k
+          path: old
+
       - name: Get Old Coverage
         shell: bash
         run: |
-          git clone https://github.com/apache/camel-k.git 
-          cd camel-k 
           old_coverage="$(grep -o -P '(?<=Coverage-)(.*)(?=%)' README.adoc)"
           cd ..
-          rm -rf camel-k
-          echo $old_coverage
 
       - name: Checkout
         uses: actions/checkout@v3
         with:
           persist-credentials: false
           fetch-depth: 0
+          path: new
 
       - name: Get New Coverage
         shell: bash
