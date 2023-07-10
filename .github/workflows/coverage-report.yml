@@ -58,10 +58,6 @@ jobs:
           go tool cover -func=coverage.out -o=coverage.out
 
           new_coverage="$(grep -o -P '(?<=\(statements\))(.+)(?=%)' coverage.out | xargs)"
-
-          echo "OLD - $old_coverage"
-          echo "NEW - $new_coverage"
-
           coverage_difference=$(bc <<< $new_coverage-$old_coverage)
 
           if (( $(echo "$coverage_difference > 0" |bc -l) )); then
@@ -76,3 +72,15 @@ jobs:
           echo "OLD_COV=$old_coverage" >> $GITHUB_ENV
           echo "COV_DIFF=$coverage_difference" >> $GITHUB_ENV
          
+      - name: Save env variables
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+          echo ${{env.OLD_COV}} > ./pr/OLD_COV
+          echo ${{env.NEW_COV}} > ./pr/NEW_COV
+          echo ${{env.COV_DIFF}} > ./pr/COV_DIFF
+          echo ${{env.POS_DIFF}} > ./pr/POS_DIFF
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pr
+          path: pr/
