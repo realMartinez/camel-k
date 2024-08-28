@@ -27,37 +27,22 @@ import (
 	"testing"
 
 	. "github.com/onsi/gomega"
-	corev1 "k8s.io/api/core/v1"
 
 	. "github.com/apache/camel-k/v2/e2e/support"
-	v1 "github.com/apache/camel-k/v2/pkg/apis/camel/v1"
-	"github.com/apache/camel-k/v2/pkg/util/knative"
+	camelv1 "github.com/apache/camel-k/v2/pkg/apis/camel/v1"
+	v1 "k8s.io/api/core/v1"
 )
 
 func TestKnativeServiceURL(t *testing.T) {
-	g := NewWithT(t)
-
-	installed, err := knative.IsServingInstalled(TestClient(t))
-	g.Expect(err).NotTo(HaveOccurred())
-	if !installed {
-		t.Error("Knative not installed in the cluster")
-		t.FailNow()
-	}
 	WithNewTestNamespace(t, func(ctx context.Context, g *WithT, ns string) {
-		operatorID := "camel-k-knative-service"
-		// Install without profile (should automatically detect the presence of Knative)
-		g.Expect(KamelInstallWithID(t, ctx, operatorID, ns)).To(Succeed())
-		g.Eventually(PlatformPhase(t, ctx, ns), TestTimeoutMedium).Should(Equal(v1.IntegrationPlatformPhaseReady))
-		g.Eventually(PlatformProfile(t, ctx, ns), TestTimeoutShort).Should(Equal(v1.TraitProfile("")))
-		cluster := Platform(t, ctx, ns)().Status.Cluster
-
-		t.Run("run yaml on cluster profile", func(t *testing.T) {
-			g.Expect(KamelRunWithID(t, ctx, operatorID, ns, "files/knative2.yaml", "--profile", string(cluster)).Execute()).To(Succeed())
-			g.Eventually(IntegrationPodPhase(t, ctx, ns, "knative2"), TestTimeoutLong).Should(Equal(corev1.PodRunning))
-			g.Eventually(IntegrationTraitProfile(t, ctx, ns, "knative2"), TestTimeoutShort).Should(Equal(v1.TraitProfile(string(cluster))))
-
-			g.Eventually(KnativeService(t, ctx, ns, "knative2")().Status.RouteStatusFields.URL.String(), TestTimeoutLong).Should(Equal("http://knative2.ns.domain"))
-
+		t.Run("Service endpoint status check", func(t *testing.T) {
+			g.Expect(KamelRun(t, ctx, ns, "files/knative2.yaml").Execute()).To(Succeed())
+			g.Eventually(IntegrationPodPhase(t, ctx, ns, "knative2"), TestTimeoutLong).Should(Equal(v1.PodRunning))
+			g.Eventually(IntegrationConditionStatus(t, ctx, ns, "knative2", camelv1.IntegrationConditionReady), TestTimeoutMedium).Should(Equal(v1.ConditionTrue))
+			ks := KnativeService(t, ctx, ns, "knative2")
+			g.Eventually(ks, TestTimeoutShort).ShouldNot(BeNil())
+			url := "http://knative2." + ns + ".svc.cluster.local"
+			g.Eventually(ks().Status.RouteStatusFields.URL.String(), TestTimeoutShort).Should(Equal(url))
 			g.Expect(Kamel(t, ctx, "delete", "--all", "-n", ns).Execute()).To(Succeed())
 		})
 	})
